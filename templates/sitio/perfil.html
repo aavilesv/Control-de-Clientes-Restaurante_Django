@@ -1,0 +1,254 @@
+{% extends 'sitio/base.html' %}
+
+{% block main %}
+
+    <div class="page-header" style="background: url(/static/sitio/assets/img/banner1.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="breadcrumb-wrapper">
+                        <h2 class="page-title">Perfil</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-4 page-sidebar">
+                    <aside>
+                        <div class="sidebar-box">
+                            <div class="user">
+                                <div class="usercontent">
+                                    <h3>{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+                                    <h4>{{ request.user.email }}</h4>
+                                </div>
+                            </div>
+                            <nav class="navdashboard">
+                                <ul>
+                                    <li>
+                                        <a class="active" href="/perfil/">
+                                            <i class="fas fa-user"></i>
+                                            <span>Editar Información</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/clave/">
+                                            <i class="fas fa-user-lock"></i>
+                                            <span>Cambiar Clave</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/localesusuarios/">
+                                            <i class="fas fa-credit-card"></i>
+                                            <span>Ver Locales</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </aside>
+                </div>
+                <div class="col-lg-8 col-md-12 col-xs-12 page-content">
+                    <div class="inner-box">
+                        <div class="welcome-msg">
+                            <div class="user-content">
+                                <p class="small">La última vez que iniciaste sesión fue: {{ request.user.last_login }}</p>
+                            </div>
+                        </div>
+                        <form enctype="multipart/form-data" id="frmEntidad" method="POST"
+                          action="{{ ruta }}" data-parsley-validate
+                          class="form-horizontal form-label-left">{% csrf_token %}
+                            <div class="row">
+
+                                <input type="hidden" name="id" value="{{ request.user.pk }}">
+                                <input type="hidden" name="action" value="edit">
+                                <div class="col-lg-12 ">
+                                    <div class="form-group">
+                                        <label>Foto</label>
+                                        <input type="file" id="dropify-event" id="id_foto" name="foto"
+                                       data-default-file="/media/{{ request.user.usuarios.foto }}"
+                                       data-allowed-file-extensions="jpg png">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 ">
+                                    <div class="form-group">
+                                        <label>Username</label>
+                                        <input type="text" name="username" id="id_username" class="form-control" value="{{ request.user.username }}"
+                                               onKeyPress="return soloValidacion(event)">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 ">
+                                    <div class="form-group">
+                                        <label>Nombres</label>
+                                        <input type="text" name="first_name" id="id_first_name"
+                                               class="form-control" value="{{ request.user.first_name }}"
+                                               onKeyPress="return sololetras(event)">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 ">
+                                    <div class="form-group">
+                                        <label>Apellidos</label>
+                                        <input type="text" name="last_name" id="id_last_name"
+                                               class="form-control" value="{{ request.user.last_name }}"
+                                               onKeyPress="return sololetras(event)">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 ">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" name="email" id="id_email" class="form-control" value="{{ request.user.email }}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 ">
+                                    <div class="form-group">
+                                        <label>Documento</label>
+                                        <input type="text" name="documento" id="id_documento" onKeyPress="return soloNumeros(event)"
+                                               class="form-control" value="{{ request.user.usuarios.documento }}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 ">
+                                    <div class="form-group">
+                                        <label>Telefono</label>
+                                        <input type="text" maxlength="10" name="telefono" id="id_telefono" onKeyPress="return soloNumeros(event)"
+                                               class="form-control" value="{{ request.user.usuarios.telefono }}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 ">
+                                    <div class="form-group">
+                                        <label>Celular</label>
+                                        <input type="text" maxlength="10" name="celular" id="id_celular" onKeyPress="return soloNumeros(event)"
+                                               class="form-control" value="{{ request.user.usuarios.celular }}">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label>Dirección</label>
+                                        <textarea class="form-control"
+                                                  rows="5" name="direccion">{{ request.user.usuarios.direccion }}</textarea>
+                                    </div>
+                                </div>
+                                <!--BOTON-->
+                                <div class="col-lg-12">
+                                    <div class="send-btn">
+                                        <button onclick="window.location = '/'" class="btn btn-danger" type="button">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" class="btn btn-success">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="/static/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <link href="/static/selectmultiple/select2.min.css" rel="stylesheet">
+    <script src="/static/selectmultiple/select2.min.js"></script>
+    <link rel="stylesheet" href="/static/dropify/css/dropify.min.css">
+    <script src="/static/dropify/js/dropify.min.js"></script>
+    <script src="/static/validaciones/funciones.js"></script>
+    <script type="text/javascript" src="/static/input-cloak/jquery-inputcloak.min.js"></script>
+{% endblock %}
+
+{% block jscript %}
+    <script>
+        $(document).ready(function () {
+            $('.js-example-basic-multiple').select2();
+            $('.js-example-basic-single').select2();
+            $('.cloaked').inputCloak();
+    });
+
+        $(function () {
+            $('.dropify').dropify();
+            var drEvent = $('#dropify-event').dropify();
+            drEvent.on('dropify.afterClear', function (event, element) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    type: 'success',
+                    title: 'Foto eliminada con exito.',
+                    showConfirmButton: false,
+                    timer: 3500
+                })
+            });
+            var drEvent1 = $('#dropify-event-cv').dropify();
+            drEvent1.on('dropify.afterClear', function (event, element) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    type: 'success',
+                    title: 'Archivo eliminado con exito.',
+                    showConfirmButton: false,
+                    timer: 3500
+                })
+            });
+        });
+
+        $(function () {
+            $('#id_username').on('blur', function () {
+                var username = $("#id_username").val();
+                if (username == '') {
+                    Swal.fire('Nombre de usuario no valido','Perfil','error')
+                } else {
+                    $.ajax({
+                        data: {'action': 'duplicado-perfil', 'username': username},
+                        url: '/perfil/',
+                        type: 'post',
+                        success: function (data) {
+                            var object = JSON.parse(data)
+                            if (object.username == 'Existe') {
+                                $("#id_username").val("");
+                                Swal.fire('Usuario ya existe','Perfil','error')
+                            }
+                        }
+                    });
+                }
+
+            });
+        });
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                function getCookie(name) {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie != '') {
+                        var cookies = document.cookie.split(';');
+                        for (var i = 0; i < cookies.length; i++) {
+                            var cookie = jQuery.trim(cookies[i]);
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                    // Only send the token to relative URLs i.e. locally.
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            }
+        });
+
+        window.onload = function () {
+            {% if messages %}
+                {% for message in messages %}
+                    Swal.fire('{{ message }}');
+                {% endfor %}
+            {% endif %}
+         }
+    </script>
+{% endblock %}

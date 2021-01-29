@@ -1,0 +1,316 @@
+{% extends 'sitio/base.html' %}
+
+{% block main %}
+    <div class="page-header" style="background: url(/static/sitio/assets/img/banner1.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="breadcrumb-wrapper">
+                        <h2 class="page-title">Registro de Usuarios</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section id="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="page-login-form box">
+                        <h3>
+                            Registro
+                        </h3>
+
+                        <form id="frmRegistro" action="post"  enctype="multipart/form-data">{% csrf_token %}
+                            <input type="hidden" name="action" value="add">
+                            <div class="form-group">
+                                <label>Tipo Cuenta</label>
+                                <div class="input-icon">
+                                    <select class="js-example-basic-single form-control" id="tipo" name="tipo">
+                                        <option value="0">Visitante</option>
+                                        <option value="1">Normal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Foto</label>
+                                <input type="file" id="dropify-event" required id="id_foto" name="foto"
+                               data-allowed-file-extensions="jpg png">
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="icon fas fa-user"></i>
+                                    <input required type="text" class="form-control" id="id_username_new" name="username_new" placeholder="Username"
+                                           onKeyPress="return soloValidacion(event)">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="icon fas fa-user-alt"></i>
+                                    <input required type="text" id="id_first_name" class="form-control" name="first_name" onKeyPress="return sololetras(event)"
+                                           placeholder="Nombres">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="icon fas fa-user-alt"></i>
+                                    <input required type="text" id="id_last_name" class="form-control" name="last_name" onKeyPress="return sololetras(event)"
+                                           placeholder="Apellidos">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="icon fas fa-envelope"></i>
+                                    <input required type="email" id="id_email" class="form-control" name="email"
+                                           placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="icon fas fa-unlock-alt"></i>
+                                    <input required type="password" class="form-control" name="password_new" id="id_password_new" placeholder="Password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="icon fas fa-portrait"></i>
+                                    <input type="text" id="id_documento" class="form-control" name="documento" onKeyPress="return soloNumeros(event)"
+                                           placeholder="Documento" maxlength="10">
+                                </div>
+                            </div>
+                            <fieldset id="normal">
+                                <div class="form-group">
+                                    <div class="input-icon">
+                                        <i class="icon fas fa-phone"></i>
+                                        <input type="text" id="id_telefono" class="form-control" name="telefono" onKeyPress="return soloNumeros(event)"
+                                               placeholder="Telefono" maxlength="10">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-icon">
+                                        <i class="icon fas fa-phone"></i>
+                                        <input type="text" id="id_celular" class="form-control" name="celular" onKeyPress="return soloNumeros(event)"
+                                               placeholder="Celular" maxlength="10">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                <label>Dirección</label>
+                                <textarea class="form-control" id="id_direccion"
+                                          rows="5" name="direccion">{{ request.user.usuarios.direccion }}</textarea>
+                            </div>
+                            </fieldset>
+
+                            <button class="btn btn-common log-btn">Registrar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block js %}
+    <script src="/static/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <link href="/static/selectmultiple/select2.min.css" rel="stylesheet">
+    <script src="/static/selectmultiple/select2.min.js"></script>
+    <link rel="stylesheet" href="/static/dropify/css/dropify.min.css">
+    <script src="/static/dropify/js/dropify.min.js"></script>
+    <script src="/static/validaciones/funciones.js"></script>
+    <script type="text/javascript" src="/static/input-cloak/jquery-inputcloak.min.js"></script>
+{% endblock %}
+
+{% block jscript %}
+    <script>
+
+        $('#frmRegistro').submit(function (e) {
+            e.preventDefault();
+            Swal.fire({
+                imageUrl: '/static/cargar4.gif',
+                imageHeight: 200,
+                imageAlt: 'Verificando', showConfirmButton: false
+            })
+            $form = $(this)
+            var formData = new FormData(this);
+            $.ajax({
+                url: '/registro/',
+                type: 'POST',
+                data: formData,
+                success: function (data) {
+                    object = JSON.parse(data)
+                    if (object.id == 'Existe') {
+                        Swal.fire({
+                            imageUrl: '/static/cargar4.gif',
+                            imageHeight: 200,
+                            imageAlt: 'Verificando', showConfirmButton: false
+                        })
+                        Swal.fire(
+                                'Registro exitoso!',
+                                'REGISTRO',
+                                'success'
+                        )
+                        setTimeout("window.location = '/panel/'", 1000);
+                    }
+              },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+        });
+
+        $(function () {
+            $('.dropify').dropify();
+            var drEvent = $('#dropify-event').dropify();
+            drEvent.on('dropify.afterClear', function (event, element) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    type: 'success',
+                    title: 'Foto eliminada con exito.',
+                    showConfirmButton: false,
+                    timer: 3500
+                })
+            });
+            var drEvent1 = $('#dropify-event-cv').dropify();
+            drEvent1.on('dropify.afterClear', function (event, element) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    type: 'success',
+                    title: 'Archivo eliminado con exito.',
+                    showConfirmButton: false,
+                    timer: 3500
+                })
+            });
+        });
+
+        $(function () {
+            $('#id_username_new').on('blur', function () {
+                var username = $("#id_username_new").val();
+                if (username == '') {
+                    Swal.fire('Nombre de usuario no valido','Registro','error')
+                } else {
+                    $.ajax({
+                        data: {'action': 'duplicado', 'username': username},
+                        url: '{{ ruta }}',
+                        type: 'post',
+                        success: function (data) {
+                            var object = JSON.parse(data)
+                            if (object.username == 'Existe') {
+                                $("#id_username_new").val("");
+                                $("#id_password_new").val("");
+                                Swal.fire('Nombre de usuario ya existe','Registro','error')
+                            }
+                        }
+                    });
+                }
+
+            });
+
+            $('#tipo').on('change',function(){
+                tipo = $('#tipo').val()
+                console.log(tipo)
+                if(tipo == 1){
+                    $('#normal').show()
+                    $('id_documento').attr('required')
+                    $('id_telefono').attr('required')
+                    $('id_celular').attr('required')
+                }else{
+                    $('#normal').hide()
+                    $('id_documento').removeAttr('required')
+                    $('id_telefono').removeAttr('required')
+                    $('id_celular').removeAttr('required')
+                }
+            })
+        });
+
+        window.onload = function () {
+            $("#id_username_new").val("");
+            $("#id_password_new").val("");
+            {% if messages %}
+                {% for message in messages %}
+                    Swal.fire('{{ message }}','ALERTA','warning');
+                {% endfor %}
+            {% endif %}
+            $('#normal').hide()
+            $('id_documento').removeAttr('required')
+            $('id_telefono').removeAttr('required')
+            $('id_celular').removeAttr('required')
+        }
+
+        $(document).ready(function () {
+            $('.cloaked').inputCloak();
+        });
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                function getCookie(name) {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie != '') {
+                        var cookies = document.cookie.split(';');
+                        for (var i = 0; i < cookies.length; i++) {
+                            var cookie = jQuery.trim(cookies[i]);
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                    // Only send the token to relative URLs i.e. locally.
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            }
+        });
+
+        $(function () {
+            $('#id_documento').on('blur', function () {
+                var ruc = $("#id_documento").val();
+                if (verificarCedula(ruc)) {
+                    $.ajax({
+                    data: {'ruc': ruc,'action':'ruc'},
+                    url: '{{ ruta }}',
+                    type: 'post',
+                    success: function (data) {
+                        console.log(data)
+                        var object = JSON.parse(data)
+                        console.log(object.ruc)
+                        if (object.ruc == 'Existe') {
+                            $("#id_documento").val("");
+                            swal.fire("Cedula ya existe registrado",'Registro','error');
+                        }
+                    }
+                });
+                }else {
+                    $("#id_documento").val("");
+                    swal("Numero de cedula incorrecto",'Registro','error');
+                }
+
+            });
+
+
+            $('.select2-search__field').on('blur', function () {
+                console.log('a')
+
+            });
+
+
+            $('#id_celular').on('blur', function () {
+                var celular = $('#id_celular').val();
+                if (celular.length < 10) {
+                    $("#id_celular").val("");
+                    swal("Celular debe contener 10 digitos");
+                }
+            });
+        });
+
+
+    </script>
+{% endblock %}

@@ -1,0 +1,320 @@
+{% extends 'sitio/base.html' %}
+
+{% block main %}
+
+        <style>
+
+        .carousel {
+          position: relative;
+          width: 600px;
+          height: 400px;
+          overflow: hidden;
+          margin: 0 auto;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .carousel:hover .slide:after,
+        .carousel:hover .counter,
+        .carousel:hover .slide:before {
+          opacity: 1;
+        }
+        .slide {
+          float: right;
+          position: absolute;
+          z-index: 1;
+          width: 600px;
+          height: 400px;
+          background-color: #eee;
+          text-align: center;
+          transition: opacity 0.4s;
+          opacity: 1;
+        }
+        .slide:before {
+          content: attr(annot);
+          display: block;
+          position: absolute;
+          left: 20px;
+          bottom: 20px;
+          color: rgba(255,255,255,0.9);
+          font-size: 14px;
+          font-weight: 300;
+          z-index: 12;
+          opacity: 0;
+          transition: opacity 0.3s;
+          text-shadow: 0 0 1px #000;
+        }
+        .slide:after {
+          content: attr(slide);
+          display: block;
+          position: absolute;
+          bottom: 0;
+          transition: opacity 0.3s;
+          width: 100%;
+          height: 80px;
+          opacity: 0;
+          background-image: linear-gradient(transparent, rgba(0,0,0,0.5));
+          text-align: left;
+          text-indent: 549px;
+          line-height: 101px;
+          font-size: 13px;
+          color: rgba(255,255,255,0.9);
+          text-shadow: 0 0 1px #000;
+        }
+        .counter {
+          position: absolute;
+          bottom: 20px;
+          right: 1px;
+          height: 20px;
+          width: 60px;
+          z-index: 2;
+          text-align: center;
+          color: #fff;
+          line-height: 21px;
+          font-size: 13px;
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+        .faux-ui-facia {
+          top: 0;
+          right: 0;
+          float: right;
+          position: absolute;
+          margin-top: 0;
+          z-index: 9;
+          height: 100%;
+          width: 100%;
+          opacity: 0;
+          cursor: pointer;
+        }
+        .faux-ui-facia:checked {
+          z-index: 8;
+        }
+        .faux-ui-facia:checked + .slide {
+          opacity: 0;
+        }
+        .faux-ui-facia:checked:nth-child(1):checked {
+          z-index: 9;
+        }
+        .faux-ui-facia:nth-child(1):checked {
+          float: left;
+          z-index: 9;
+        }
+        .faux-ui-facia:nth-child(1):checked + .slide {
+          opacity: 1;
+        }
+        .faux-ui-facia:nth-child(1):checked ~ .faux-ui-facia {
+          float: left;
+          z-index: 8;
+        }
+        .faux-ui-facia:nth-child(1):checked ~ .faux-ui-facia + .slide {
+          opacity: 0;
+        }
+        .faux-ui-facia:nth-child(1):checked ~ .faux-ui-facia:checked {
+          z-index: 9;
+        }
+        .faux-ui-facia:nth-child(1):checked ~ .faux-ui-facia:checked + .slide {
+          opacity: 1;
+        }
+        /* --- Intro text --- */
+        .intro {
+          padding: 80px 0 60px 0;
+          text-align: center;
+          color: #fff;
+          margin: auto;
+          width: 800px;
+        }
+        .intro .intro__title {
+          font-weight: 200;
+          font-size: 32px;
+          color: #fff;
+        }
+        .intro .intro__body {
+          color: #fff;
+          font-size: 16px;
+          line-height: 24px;
+          font-weight: 300;
+          opacity: 0.48;
+          padding: 0 160px;
+          margin: 0;
+        }
+    </style>
+
+    <div id="search-row-wrapper">
+        <div class="container">
+            <div class="search-inner">
+                <h2>Locales</h2>
+                <div class="search-bar">
+                    <fieldset>
+                                            <form class="search-form">
+                                                <div class="form-group">
+                                                    <i class="lni-bullhorn"></i>
+                                                    <input type="text" id="nombrebuscar" class="form-control" width="100%"
+                                                           placeholder="Que estas buscando?">
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="tg-select">
+                                                        <select id="categoriabuscar">
+                                                            {% for c in categorias %}
+                                                                <option value="{{ c.pk }}">{{ c.descripcion }}</option>
+                                                            {% endfor %}
+                                                            <i class="lnr-chevron-down"></i>
+                                                        </select>
+                                                        <i class="fas fa-angle-down"></i>
+                                                    </div>
+                                                </div>
+                                                <button id="buscarboton" class="btn btn-common" type="button"><i class="lni-search"></i> Buscar
+                                                </button>
+                                            </form>
+                                        </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="main-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-12 col-xs-12 page-sidebar">
+                    <aside>
+                        <div class="inner-box">
+                            <div class="categories">
+                                <div class="widget-title">
+                                    <i class="fas fa-align-justify"></i>
+                                    <h4>Todas las categorias</h4>
+                                </div>
+                                <div class="categories-list">
+                                    <ul>
+                                        {% for c in categorias %}
+                                            <li>
+                                            <a href="{{ ruta }}?criterio={{ c.pk }}">
+                                                {{ c.descripcion }}
+                                            </a>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+                <div class="col-lg-9 col-md-12 col-xs-12 page-content">
+
+                    <div class="product-filter">
+                        <div class="grid-list-count">
+                            <a class="list switchToGrid" href="#"><i class="fas fa-list"></i></a>
+                            <a class="grid switchToList" href="#"><i class="fas fa-th-large"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="adds-wrapper">
+                         {% for l in locales %}
+                            <div class="item-list" style="background-color: #E8E8E8">
+                                <div class="row">
+                                <div class="col-sm-2 no-padding photobox">
+                                    <div class="add-image">
+                                        <a href="/media/{{ l.fotouno }}" data-lightbox="roadtrip"><img src="/media/{{ l.fotouno }}" alt=""></a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-7 add-desc-box">
+                                    <div class="add-details">
+                                        <h5 class="add-title"><a href="/locales/?action=ver&id={{ l.pk }}">{{ l.nombreComercial }}</a>
+                                        </h5>
+
+                                        <div class="info">
+                                            <!--<span class="add-type">B</span>-->
+                                            <span class="date">
+                                            <i class="fas fa-phone"></i>
+                                             {{ l.telefono }}
+                                            </span> -
+                                            <span class="category">
+                                            <i class="fas fa-at"></i> {{ l.correo }}</span> -
+                                            <span class="item-location"><i class="fas fa-map-marker"></i> {{ l.direccion }} </span>
+                                        </div>
+                                        <div class="item_desc">
+                                            <a href="#">{{ l.descripcion }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 float-right  price-box"><br><br>
+                                    <a class="btn btn-danger btn-sm"><i class="fas fa-certificate"></i>
+                                        <span>{{ l.valortotal|floatformat:2 }}</span></a>
+                                    <a class="btn btn-common btn-sm"> <i class="fas fa-eye"></i>
+                                        <span>{{ l.visita }}</span> </a>{% if l.oferta == True %}
+                                    <a class="btn btn-success btn-sm" ><i class="fas fa-certificate"></i>
+                                       <span>CON OFERTAS</span></a> {% endif %}
+
+                                </div>
+                            </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="col-12">
+                        <div class="pagination-bar">
+
+                            <nav>
+                                {% if paging.num_pages > 5 %}
+                                    <ul class='pagination'>
+                                        {% if paging.primera_pagina %}
+                                            <li class="page-item active">
+                                                <a class="page-link active" href="{{ ruta }}{% if criterio %}?criterio={{ criterio }}&{% elif criterio1 %}?criterio1={{ criterio1 }}&{% else %}?{% endif %}{% if search %}s={{ search }}&{% endif %}page=1">1</a>
+                                            </li>
+                                            <li class="page-item active">
+                                                <a href="{{ ruta }}{% if criterio %}?criterio={{ criterio }}&{% elif criterio1 %}?criterio1={{ criterio1 }}&{% else %}?{% endif %}{% if search %}s={{ search }}&{% endif %}page={{ paging.ellipsis_izquierda }}"
+                                                   class="page-link active">...</a></li>
+                                        {% endif %}
+                                        {% for pagenumber in paging.paginas %}
+                                            <li {% ifequal pagenumber page.number %}class='page-item'{% endifequal %}>
+                                                <a class="page-link active"  href="{{ ruta }}{% if criterio %}?criterio={{ criterio }}&{% elif criterio1 %}?criterio1={{ criterio1 }}&{% else %}?{% endif %}{% if search %}s={{ search }}&{% endif %}page={{ pagenumber }}">{{ pagenumber }}</a>
+                                            </li>
+                                        {% endfor %}
+                                        {% if paging.ultima_pagina %}
+                                            <li class="page-item active">
+                                                <a href="{{ ruta }}{% if criterio %}?criterio={{ criterio }}&{% elif criterio1 %}?criterio1={{ criterio1 }}&{% else %}?{% endif %}{% if search %}s={{ search }}&{% endif %}page={{ paging.ellipsis_derecha }}"
+                                                   class="page-link active">...</a></li>
+                                            <li class="page-item active">
+                                                <a class="page-link active" href="{{ ruta }}{% if criterio %}?criterio={{ criterio }}&{% elif criterio1 %}?criterio1={{ criterio1 }}&{% else %}?{% endif %}{% if search %}s={{ search }}&{% endif %}page={{ paging.num_pages }}">{{ paging.num_pages }}</a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                {% else %}
+                                    <ul class='pagination'>
+                                        {% for pagenumber in paging.page_range %}
+                                            <li {% ifequal pagenumber page.number %}class='page-item active'{% endifequal %}>
+                                                <a class="page-link active" href="{{ ruta }}{% if criterio %}?criterio={{ criterio }}&{% elif criterio1 %}?criterio1={{ criterio1 }}&{% else %}?{% endif %}{% if search %}s={{ search }}&{% endif %}page={{ pagenumber }}">{{ pagenumber }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </nav>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="/static/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <link href="/static/selectmultiple/select2.min.css" rel="stylesheet">
+    <script src="/static/selectmultiple/select2.min.js"></script>
+    <link rel="stylesheet" href="/static/dropify/css/dropify.min.css">
+    <script src="/static/dropify/js/dropify.min.js"></script>
+    <script src="/static/validaciones/funciones.js"></script>
+    <script type="text/javascript" src="/static/input-cloak/jquery-inputcloak.min.js"></script>
+{% endblock %}
+
+{% block jscript %}
+    <script>
+        $('#buscarboton').click(function(){
+            combo = $('#categoriabuscar').val()
+            nombre = $('#nombrebuscar').val()
+            window.location = '/locales/?criterio=' + combo +'&nombre='+ nombre;
+        })
+    </script>
+{% endblock %}

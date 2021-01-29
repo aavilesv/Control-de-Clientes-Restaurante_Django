@@ -1,0 +1,68 @@
+{% extends 'sitio/base.html' %}
+
+{% block main %}
+
+    <div class="page-header" style="background: url(/static/sitio/assets/img/banner1.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="breadcrumb-wrapper">
+                        <h2 class="page-title">PREGUNTAS FRECUENTES</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="content">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="head-faq text-center">
+                        <h2 class="section-title">Preguntas frecuentes</h2>
+                    </div>
+                    <div><center><h3>¿COMO REGISTRARME?  </h3><br><iframe width="560" height="315" src="https://www.youtube.com/embed/JBcgyAw0rXE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                       <br><br><h3>¿CUALES SON LAS FUNCIONES DE LA PAGINA  WEB?</h3><br> <iframe width="560" height="315" src="https://www.youtube.com/embed/jidwZrSRhko" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center></div>
+<br><br>
+                    <div class="panel-group" id="accordion">
+                        {% for f in faq %}
+                            <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                        {{ f.pregunta }}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <p>{{ f.respuesta }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <link href="/static/selectmultiple/select2.min.css" rel="stylesheet">
+    <script src="/static/selectmultiple/select2.min.js"></script>
+    <link rel="stylesheet" href="/static/dropify/css/dropify.min.css">
+    <script src="/static/dropify/js/dropify.min.js"></script>
+    <script src="/static/validaciones/funciones.js"></script>
+    <script type="text/javascript" src="/static/input-cloak/jquery-inputcloak.min.js"></script>
+{% endblock %}
+
+{% block jscript %}
+{% endblock %}

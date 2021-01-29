@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block main %}
+    <div class="row-fluid">
+        <div class="span12">
+            <ul class="breadcrumb">
+                <li><a href="/panel/">Inicio</a><span class="divider"></span></li>
+                <li><a href="{{ ruta }}" class="active">{{ model }}</a> <span class="divider">/</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel panel-footer">
+        <div class="panel-heading">
+            <div class="row-fluid">
+                <h2>Listado de {{ model }}</h2>
+
+                 {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                    aria-hidden="true">×</span>
+                            </button>
+                            <strong>Alerta! </strong> {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="container-fluid well-sm" style="padding-top: 3%">
+                    <div class="col-lg-1">
+                        <a style="border-radius: 0px" href="#" rel="action" data-json='{"action": "add","id":""}'
+                           class="btn btn-success sbox">
+                            <i class="glyphicon glyphicon-plus-sign"></i>
+                            Nuevo Registros
+                        </a>
+                    </div><br>
+
+                    <form class="col-lg-offset-4" method="GET" action="{{ ruta }}">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+
+                                <button type="button" class="btn btn-info">Buscar</button>
+
+                            </div>
+
+                            <input type="text" name="criterio" value="{{ criterio }}" class="form-control"
+                                   placeholder="Ponga una descripción válida..">
+
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Tabla -->
+
+        <div class="panel-body">
+            <div class="panel panel-default">
+                <table id="tb_marca"
+                   class="table table-hover table-striped table-condensed" width="100%">
+                    <thead style="background: #2c4c69; color:#ffffff">
+                        <tr class="headings">
+                            <th class="column-title">Foto</th>
+                            <th class="column-title">Nombre</th>
+                            <th class="column-title">Descripcion</th>
+                            <th class="column-title">Descuento</th>
+                            <th class="column-title">Precio</th>
+                             <th class="column-title">Oferta</th>
+                            <th class="column-title">Estado</th>
+                            <th class="column-title">Acción</th>
+                        </tr>
+                        </thead>
+                    <tbody>
+                        {% for p in Platos %}
+                            <tr>
+                                <td>{% load staticfiles %}<a href="#" rel="action"
+                                       data-json='{"action":"vermarca","marca":"{{ p.foto }}","nombre":"{{ p.nombre }}","nombres":"{{ p.descripcion }}"}'>
+
+                                    <img id="presentaimg2" src="/media/{{ p.foto }}" class="img-thumbnail"
+                                         width="50px" align="middle"
+                                         alt="..."></a></td>
+
+                                <td>{{ p.nombre }}</td>
+                                <td>{{ p.descripcion }}</td>
+                                <td>{{ p.descuento }}%  </td>
+                                <td>{{ p.precio }}</td>
+                                   <td><center>
+                                    {% if p.oferta == True %}
+                                        <p><span class="label label-success">SI</span></p>
+                                    {% else %}
+                                        <p><span class="label label-danger">NO</span></p>
+                                    {% endif %}</center>
+                                </td>
+
+
+                                <td><center>
+                                    {% if p.estado == True %}
+                                        <p><span class="label label-success">ACTIVO</span></p>
+                                    {% else %}
+                                        <p><span class="label label-danger">INACTIVO</span></p>
+                                    {% endif %}</center>
+                                </td>
+
+
+                                <td>
+                                <div class="btn-group">
+                                    <a href="#" rel="action" class="btn btn-default btn-sm"
+                                       data-toggle="tooltip"
+                                       data-placement="bottom"
+                                       title="Ver"
+                                       data-json='{"action":"ver","id":"{{ p.id }}","nombre":"{{ p.nombre }}"}'><i
+                                            class="glyphicon glyphicon-eye-open"></i></a>   </div>
+                                <div class="btn-group">
+                                        <a href="#" rel="action" class="btn btn-info btn-sm"
+                                       data-toggle="tooltip"
+                                       data-placement="bottom"
+                                       title="Editar"
+                                           data-json='{"action":"edit","id":"{{ p.id }}","nombre":"{{ p.nombre }}"}'><i
+                                                class="glyphicon glyphicon-edit"></i></a>   </div>
+                                <div class="btn-group">
+                                        <a href="#" rel="action" class="btn btn-warning btn-sm"
+                                       data-toggle="tooltip"
+                                       data-placement="bottom"
+                                       title="Desactivar" data-json='{"action":"elim","id":"{{ p.id }}","nombre":"{{ p.nombre }}"}'><i
+                                                class="glyphicon glyphicon-remove"></i></a>   </div>
+                                </td>
+
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- inicio formulario Modal para Eliminar -->
+    <div class="modal fade bs-example-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+
+                <form name="frmEliminar" id="frmEliminar" method="POST" action="{{ ruta }}"> {% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">¿Desea desactivar a este empleado?</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="id" value="">
+                        <input type="hidden" name="action" value="elim">
+
+                        <label>Nombre:</label>
+                        <span id="nombre"></span>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger" id="btnElimiar">Desactivar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+<script src="{% static "js/jquery-3.3.1.min.js" %}"></script>
+{% endblock %}
+
+{% block jscript %}
+    <script>
+
+        $(function () {
+            $('#contenedor').on('click', 'a[rel="action"]', function () {
+                var data = $(this).data('json'),
+                        action = data.action,
+                        id = data.id,
+                        nombre = data.nombre;
+
+
+                if (action == 'elim') {
+                    Swal.fire({
+                        title: 'SEGURO QUE DESEA ELIMINAR ESTE REGISTRO?',
+                        text: "No podrás revertir esto!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes'
+                    }).then((result) => {
+                        if(result.value)
+                    {
+                        $.ajax({
+                            data: {'id': id,'action':action},
+                            url: '{{ ruta }}',
+                            type: 'get',
+                            success: function (data) {
+                                console.log(data)
+                                var object = JSON.parse(data)
+                                console.log(object.id)
+                                if (object.id == 'Existe') {
+                                    Swal.fire(
+                                            'Eliminado!',
+                                            'Registro eliminado.',
+                                            'success'
+                                    )
+                                    setTimeout('window.location.reload()', 1500);
+                                } else {
+                                    alertify.error('No se pudo eliminar este registro');
+                                }
+                            }
+                        });
+                    }
+                })
+                    return;
+                }
+
+
+                 if (action == 'vermarca') {
+                    Swal.fire({
+                        title: nombre,
+                        text: data.nombres,
+                        imageUrl: '/media/'+data.marca,
+                        imageWidth: 400,
+                        imageHeight: 200,
+                        imageAlt: 'Custom image',
+                        animation: false
+                    })
+                    return;
+                }
+
+                window.location = '{{ ruta }}?action=' + action + '&id=' + id;
+            });
+        });
+       $(document).ready(function () {
+           const tb_marca = $('#tb_marca').DataTable({
+               responsive: true,
+               searching: false,
+                paging: false,
+                bInfo: false,
+                dom: "<'row'<'col-sm-12 col-md-3'f><'col-sm-12 col-md-3'l><'col-sm-12 col-md-4'B>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-md-5 col-sm-12'i><'col-md-7 col-sm-12'p>>",
+                language: {
+                    "url": '/static/js/i18n/Spanish.json'
+                },
+                buttons: []
+            });
+            $('#tb_marca tbody').on('click', 'tr', function () {
+                var data = tb_marca.row(this).data();
+            });
+        });
+
+    </script>
+{% endblock %}
+
+</body>
+</html>

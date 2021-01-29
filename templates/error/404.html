@@ -1,0 +1,43 @@
+{% extends 'sitio/base.html' %}
+
+{% block main %}
+
+    <div class="page-header" style="background: url(/static/sitio/assets/img/banner2.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="breadcrumb-wrapper">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="fallback-inner">
+
+                    <div class="buttons">
+                        <h2>404</h2><br>
+                        <h2>CONTENIDO NO FUE ENCONTRADO</h2><br>
+                        <div class="btn btn-common"><a href="/" style="color: #ffffff;">Ir a inicio</a></div>
+                    </div>
+                    <div class="fallback-content">
+                        <h2>Para encontrar el contenido<br> que falta, intente estos pasos:</h2>
+                        <ul>
+                            <li>Visita la página de inicio del dominio.</li>
+                            <li><a rel="nofollow" href="/" target="_self">Recargar pagina.</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block jscript %}
+{% endblock %}

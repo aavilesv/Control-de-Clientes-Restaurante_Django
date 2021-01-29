@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% block headcss %}
+
+{% endblock %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+{% block main %}
+
+    <div class="row-fluid">
+        <div class="span12">
+            <ul class="breadcrumb">
+                <li><a href="/panel/">Inicio</a><span class="divider"></span></li>
+                <li><a href="{{ ruta }}" class="active">{{ model }}</a> <span class="divider">/</span></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Formulario de Mantenimiento-->
+    <div class=container>
+
+        <div class='row-fluid'>
+            <div class='col-md-14'>
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h4><strong>{{ titulo }}</strong></h4>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" enctype="multipart/form-data" id="frmEntidad" method="POST"
+                              action="{{ ruta }}">{% csrf_token %}
+                            <input type="hidden" name="id" value="{{ id }}">
+                            <input type="hidden" name="action" value="{{ action }}">
+                            <!-- Campos del formulario-->
+                            <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Foto<span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                 {% if action == 'add' %}
+                                    <img class="img-responsive img-thumbnail" formaction="formpersonal"
+                                         id="presentaimg" bgcolor="#222"
+                                         src='/media/usuarios/nofound.png' width="90%" length="90%"
+                                         alt=""/>
+                                {% elif action == 'edit' or action == 'ver' %}
+                                    <img class="img-responsive img-thumbnail" formaction="formpersonal"
+                                         id="presentaimg" bgcolor="#222"
+                                         src='/media/{{ foto }}' width="90%" length="90%"
+                                         alt=""/>
+                                {% endif %}
+                            </div>
+                        </div>
+                               <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Foto<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input
+                                                                                {% if accion == 'ver' or request.user.is_staff == False %}
+                                                                                    disabled {% endif %}
+                                                                                    class="form-control-file" id="id_foto"
+                                                                                    name="foto"
+                                                                                    {% if action == 'add' %}required{% endif %}
+                                                                                    type="file"/>
+                                    </div>
+                                </div>
+
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Username<span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input class="form-control" id="id_username"
+                                                                       value="{{ empleado.username }}"
+                                                                        {% if accion == 'ver' %}
+                                                                       disabled {% endif %}
+                                                                       placeholder="Username" maxlength="40"
+                                                                       name="username" autocomplete="off"
+                                                                       type="text" {% if action == 'edit' %}
+                                                                       disabled {% endif %}
+                                                                       {% if action == 'add' %}required{% endif %}/>
+                            </div>
+                        </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Contraseña<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input {% if action == 'add' %}required{% endif %}
+                                               class="cloaked form-control" type="text"
+                                                {% if accion == 'ver' %}
+                                               disabled {% endif %}
+                                               id="id_password" name="password"
+                                               placeholder="****"
+                                               autocomplete="off">
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Nombres<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder="Nombre"
+                                                                               id="id_first_name"  {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               value="{{ empleado.first_name }}"
+                                                                               maxlength="50" name="first_name" type="text"
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Apellidos<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder="Apellido"
+                                                                               id="id_last_name"
+                                                                               value="{{ empleado.last_name }}"
+                                                                               maxlength="50" name="last_name" type="text"
+                                                                                {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Documento<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder=""
+                                                                               id="id_documento"  {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               onKeyPress="return soloNumeros(event)"
+                                                                               value="{{ documento }}"
+                                                                               maxlength="10" name="documento" type="text"
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Celular<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder=""
+                                                                               id="id_celular"  {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               onKeyPress="return soloNumeros(event)"
+                                                                               value="{{ celular }}"
+                                                                               maxlength="10" name="celular" type="text"
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Telefono<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder="0999999999"
+                                                                               id="id_telefonon"  {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               onKeyPress="return soloNumeros(event)"
+                                                                               value="{{ telefono }}"
+                                                                               maxlength="10" name="telefono" type="text"
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Email<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" id="id_email"
+                                                                                {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               maxlength="300" value="{{ empleado.email }}"
+                                                                               placeholder="email" name="email" type="text"
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Nivel de Acceso<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select class="js-example-basic-single form-control"
+                                                id="id_group"  {% if accion == 'ver' %}
+                                                disabled {% endif %}
+                                                name="group"
+                                                {% if action == 'add' %}required{% endif %}>
+                                            {% for c in gro %}
+                                                <option value="{{ c.id }}"
+                                                        {% if c.name == grupo %}
+                                                        selected="selected"
+                                                        {% endif %}>{{ c.name |capfirst }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">¿Activo?
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input
+                                                {% if accion == 'ver' %}
+                                                    disabled {% endif %}
+                                                    type="checkbox" id="id_activo" name="activo"
+                                                    class="js-switch"
+                                                {% if activo == True %} checked  {% endif %}/>
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">¿Es Staff?
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                         <input  {% if accion == 'ver' %}
+                                            disabled {% endif %}
+                                            type="checkbox" id="id_is_staff"
+                                            name="is_staff"
+                                            class="js-switch"
+                                                {% if empleado.is_staff == True %}
+                                            checked  {% endif %}/>
+                                    </div>
+                                </div>
+                            <div class="well well-sm">
+                                <div class="row">
+                                    <div class="col-xs-5 col-lg-offset-4">
+                                        <div class="btn btn-group col-md-offset-3 ">
+
+                                            <button type="submit" style="border-radius: 0px"
+                                                    class="btn btn-success sbox" id="add">
+                                                <i class="glyphicon glyphicon-save"></i> Guardar
+                                            </button>
+
+                                            <button type="button"
+                                                    onclick="window.location = '{{ ruta }}'"
+                                                    style="border-radius: 0px" class="btn btn-danger sbox"
+                                                    id="add1">
+                                                <i class="glyphicon glyphicon-remove"></i> Cancelar
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/validaciones/funciones.js"></script>
+    <link href="/static/selectmultiple/select2.min.css" rel="stylesheet">
+    <script src="/static/selectmultiple/select2.min.js"></script>
+    <script type="text/javascript" src="/static/input-cloak/jquery-inputcloak.min.js"></script>
+{% endblock %}
+
+{% block jscript %}
+    <script>
+
+        $(document).ready(function () {
+            $('.cloaked').inputCloak();
+        });
+
+
+        $(function () {
+            $('#id_username').on('blur', function () {
+                var username = $("#id_username").val();
+                $.ajax({
+                    data: {'username': username},
+                    url: '{{ ruta }}',
+                    type: 'get',
+                    success: function (data) {
+                        var object = JSON.parse(data)
+                        if (object.username == 'Existe') {
+                            $("#id_username").val("");
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                type: 'error',
+                                title: 'Nombre de usuario no valido.',
+                                showConfirmButton: false,
+                                timer: 3500
+                            })
+                        }
+                    }
+                });
+
+            });
+        });
+
+
+        $(function () {
+
+            $('#id_documento').on('blur', function () {
+                var ruc = $("#id_documento").val();
+                if (verificarCedula(ruc)) {
+                    $.ajax({
+                    data: {'ruc': ruc,'action':'ruc'},
+                    url: '{{ ruta }}',
+                    type: 'post',
+                    success: function (data) {
+                        console.log(data)
+                        var object = JSON.parse(data)
+                        console.log(object.ruc)
+                        if (object.ruc == 'Existe') {
+                            $("#id_documento").val("");
+                            swal.fire("Cedula ya existe registrado",'Registro','error');
+                        }
+                    }
+                });
+                }else {
+                    $("#id_documento").val("");
+                    swal("Numero de cedula incorrecto",'Registro','error');
+                }
+
+            });
+
+
+            $('#id_email').on('blur', function () {
+                var email = $('#id_email').val();
+                if (email.length < 10 || validarEmail(email)) {
+                    $("#id_email").val("");
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        type: 'error',
+                        title: 'Email no valido.',
+                        showConfirmButton: false,
+                        timer: 3500
+                    })
+                }
+            });
+        });
+
+
+
+        $(function () {
+            $('#id_foto').on('change', function () {
+                var rutaimg = $(this).val();
+                var extension = rutaimg.substring(rutaimg.length - 3, rutaimg.length);
+                if (extension.toLowerCase() === 'png' || extension.toLowerCase() === 'jpg') {
+                    $('#presentaimg').fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
+                } else {
+                    $(this).val('');
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        type: 'error',
+                        title: 'Formato no valido.',
+                        showConfirmButton: false,
+                        timer: 3500
+                    })
+                }
+            });
+        });
+
+
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+        });
+
+    </script>
+{% endblock %}

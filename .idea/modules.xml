@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://D:/carter/.idea/carter.iml" filepath="D:/carter/.idea/carter.iml" />
+      <module fileurl="file://D:/gedc/.idea/gedc.iml" filepath="D:/gedc/.idea/gedc.iml" />
+      <module fileurl="file://D:/gerontologico/.idea/gerontologico.iml" filepath="D:/gerontologico/.idea/gerontologico.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/multirestaurante.iml" filepath="$PROJECT_DIR$/.idea/multirestaurante.iml" />
+      <module fileurl="file://D:/Inventario Soluciones Integrales v3/pryinventario/.idea/pryinventario.iml" filepath="D:/Inventario Soluciones Integrales v3/pryinventario/.idea/pryinventario.iml" />
+    </modules>
+  </component>
+</project>

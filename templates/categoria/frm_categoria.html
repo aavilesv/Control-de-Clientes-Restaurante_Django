@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block headcss %}
+
+{% endblock %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+{% block main %}
+
+    <div class="row-fluid">
+        <div class="span12">
+            <ul class="breadcrumb">
+                <li><a href="/panel/">Inicio</a><span class="divider"></span></li>
+                <li><a href="{{ ruta }}" class="active">{{ model }}</a> <span class="divider">/</span></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Formulario de Mantenimiento-->
+    <div class=container>
+
+        <div class='row-fluid'>
+            <div class='col-md-14'>
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h4><strong>{{ titulo }}</strong></h4>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" enctype="multipart/form-data" id="frmEntidad" method="POST"
+                              action="{{ ruta }}">{% csrf_token %}
+                            <input type="hidden" name="id" value="{{ id }}">
+                            <input type="hidden" name="action" value="{{ action }}">
+                            <!-- Campos del formulario-->
+
+
+
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Descripcion<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder="Descripcion"
+                                                                               id="id_descripcion"  {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               value="{{ descripcion }}"
+                                                                               maxlength="50" name="descripcion" type="text"
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">¿Activo?
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input
+                                                {% if accion == 'ver' %}
+                                                    disabled {% endif %}
+                                                    type="checkbox" id="estado" name="estado"
+                                                    class="js-switch"
+                                                {% if estado == True %} checked  {% endif %}/>
+                                    </div>
+                                </div>
+
+
+                            <div class="well well-sm">
+                                <div class="row">
+                                    <div class="col-xs-5 col-lg-offset-4">
+                                        <div class="btn btn-group col-md-offset-3 ">
+
+                                            <button type="submit" style="border-radius: 0px" {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                    class="btn btn-success sbox" id="add">
+                                                <i class="glyphicon glyphicon-save"></i> Guardar
+                                            </button>
+
+                                            <button type="button"
+                                                    onclick="window.location = '{{ ruta }}'"
+                                                    style="border-radius: 0px" class="btn btn-danger sbox"
+                                                    id="add1">
+                                                <i class="glyphicon glyphicon-remove"></i> Cancelar
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/validaciones/funciones.js"></script>
+    <link href="/static/selectmultiple/select2.min.css" rel="stylesheet">
+    <script src="/static/selectmultiple/select2.min.js"></script>
+    <script type="text/javascript" src="/static/input-cloak/jquery-inputcloak.min.js"></script>
+{% endblock %}
+
+{% block jscript %}
+    <script>
+
+        $(document).ready(function () {
+            $('.cloaked').inputCloak();
+        });
+
+
+
+
+
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+        });
+
+    </script>
+{% endblock %}

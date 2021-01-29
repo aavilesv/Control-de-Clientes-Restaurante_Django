@@ -1,0 +1,402 @@
+{% extends 'base.html' %}
+{% block headcss %}
+
+{% endblock %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+{% block main %}
+
+    <div class="row-fluid">
+        <div class="span12">
+            <ul class="breadcrumb">
+                <li><a href="/panel/">Inicio</a><span class="divider"></span></li>
+                <li><a href="{{ ruta }}" class="active">{{ model }}</a> <span class="divider">/</span></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Formulario de Mantenimiento-->
+    <div class=container>
+
+        <div class='row-fluid'>
+            <div class='col-md-14'>
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        <h4><strong>{{ titulo }}</strong></h4>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" enctype="multipart/form-data" id="frmEntidad" method="POST"
+                              action="{{ ruta }}">{% csrf_token %}
+                            <input type="hidden" name="id" value="{{ id }}">
+                            <input type="hidden" name="action" value="{{ action }}">
+                            <!-- Campos del formulario-->
+                            <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Logo<span class="required">*</span>
+                            </label>
+                            <div class="col-md-4">
+                                 {% if action == 'add' %}
+                                    <img class="img-responsive img-thumbnail" formaction="formpersonal"
+                                         id="presentaimg" bgcolor="#222"
+                                         src='/media/locales.png' width="70%" length="70%"
+                                         alt=""/>
+                                {% elif action == 'edit' or action == 'ver' %}
+                                    <img class="img-responsive img-thumbnail" formaction="formpersonal"
+                                         id="presentaimg" bgcolor="#222"
+                                         src='/media/{{ logo }}' width="70%" length="70%"
+                                         alt=""/>
+                                {% endif %}
+                            </div>
+
+                             <div class="col-md-4">
+                                 {% if action == 'add' %}
+                                    <img class="img-responsive img-thumbnail" formaction="formpersonal"
+                                         id="presentaimg2" bgcolor="#222"
+                                         src='/media/locales.png' width="70%" length="70%"
+                                         alt=""/>
+                                {% elif action == 'edit' or action == 'ver' %}
+                                    <img class="img-responsive img-thumbnail" formaction="formpersonal"
+                                         id="presentaimg2" bgcolor="#222"
+                                         src='/media/{{ foto }}' width="70%" length="70%"
+                                         alt=""/>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                         <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                       for="last-name">Logo Comercial<span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input
+                                            {% if accion == 'ver' %}
+                                                disabled {% endif %}
+                                            class="form-control-file" id="logo"
+                                            name="logo"
+                                            {% if action == 'add' %}required{% endif %}
+                                            type="file"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Foto Comercial<span class="required">*</span>
+                                    </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input
+                                            {% if accion == 'ver' %}
+                                                disabled {% endif %}
+                                            class="form-control-file" id="foto"
+                                            name="foto"
+                                            {% if action == 'add' %}required{% endif %}
+                                            type="file"/>
+                                </div>
+                            </div>
+
+                             <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Categoria<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select class="js-example-basic-single form-control"
+                                                id="categoria"  {% if accion == 'ver' %}
+                                                disabled {% endif %}
+                                                name="categoria"
+                                                {% if action == 'add' %}required{% endif %}>
+                                            {% for c in categorias %}
+                                                <option value="{{ c.id }}"
+                                                        {% if c.id == categoria %}
+                                                        selected="selected"
+                                                        {% endif %}>{{ c.descripcion |capfirst }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                          <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Ruc<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder=""
+                                                                               id="documento"  {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+
+                                                                               value="{{ documento }}"
+                                                                               maxlength="13" name="documento" type="text"
+                                                                               {% if action == 'add' %}required{% endif %} />
+                                    </div>
+                                </div>
+
+
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Razón Social<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder="Razon Social"
+                                                                               id="Razon"  {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               value="{{razon }}"
+                                                                               maxlength="50" name="razon" type="text"
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Nombre Comercial<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder="Nombre Comercial"
+                                                                               id="nomcomercial"
+                                                                               value="{{ nombreco }}"
+                                                                               maxlength="50" name="nomcomercial" type="text"
+                                                                                {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+                        <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Descripción<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <textarea class="form-control" placeholder="Breve descripción de tu local."
+                                                                               id="descripcion"
+
+                                                                               maxlength="550" name="descripcion"> {{ descripcion }}</textarea>
+
+                                    </div>
+                                </div>
+                              <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Dirección<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder="Dirección"
+                                                                               id="direccion"
+                                                                               value="{{ direccion }}"
+                                                                               maxlength="50" name="direccion" type="text"
+                                                                                {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+
+                              <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Ubicación<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder="Copia la URL desde Google Maps para obtener tu Ubicación"
+                                                                               id="ubicacion"
+                                                                               value="{{ ubicacion }}"
+                                                                               name="ubicacion" type="text"
+                                                                                {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div><br>
+                                    <label
+                                           for="last-name">Agregar enlace de <a href="https://www.google.com/maps" target="_blank">Google Maps</a>
+                                    </label>
+                                </div>
+
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Teléfono<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" placeholder="Teléfono"
+                                                                               id="telefono"  {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               onKeyPress="return soloNumeros(event)"
+                                                                               value="{{ telefono }}"
+                                                                               maxlength="10" name="telefono" type="text"
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                           for="last-name">Correo<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input class="form-control" id="correo"
+                                                                                {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                                               maxlength="300" value="{{ correo }}"
+
+                                                                               placeholder="Email" name="correo" type="text"
+                                                                               {% if action == 'add' %}required{% endif %}/>
+                                    </div>
+                                </div>
+
+
+
+
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">En oferta
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                         <input  {% if accion == 'ver' %}
+                                            disabled {% endif %}
+                                            type="checkbox" id="oferta"
+                                            name="oferta"
+                                            class="js-switch"
+                                                {% if oferta == True %}
+                                            checked  {% endif %}/>
+                                    </div>
+                                </div>
+
+
+
+                            <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">¿Activo?
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input
+                                                {% if accion == 'ver' %}
+                                                    disabled {% endif %}
+                                                    type="checkbox" id="estado" name="estado"
+                                                    class="js-switch"
+                                                {% if estado == True %} checked  {% endif %}/>
+                                    </div>
+                                </div>
+
+                            <div class="well well-sm">
+                                <div class="row">
+                                    <div class="col-xs-5 col-lg-offset-4">
+                                        <div class="btn btn-group col-md-offset-3 ">
+
+                                            <button type="submit" style="border-radius: 0px" {% if accion == 'ver' %}
+                                                                               disabled {% endif %}
+                                                    class="btn btn-success sbox" id="add">
+                                                <i class="glyphicon glyphicon-save"></i> Guardar
+                                            </button>
+
+                                            <button type="button"
+                                                    onclick="window.location = '{{ ruta }}'"
+                                                    style="border-radius: 0px" class="btn btn-danger sbox"
+                                                    id="add1">
+                                                <i class="glyphicon glyphicon-remove"></i> Cancelar
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/validaciones/funciones.js"></script>
+    <link href="/static/selectmultiple/select2.min.css" rel="stylesheet">
+    <script src="/static/selectmultiple/select2.min.js"></script>
+    <script type="text/javascript" src="/static/input-cloak/jquery-inputcloak.min.js"></script>
+{% endblock %}
+
+{% block jscript %}
+    <script>
+
+        $(document).ready(function () {
+            $('.cloaked').inputCloak();
+        });
+
+
+        $(function () {
+            $('#id_username').on('blur', function () {
+                var username = $("#id_username").val();
+                $.ajax({
+                    data: {'username': username},
+                    url: '{{ ruta }}',
+                    type: 'get',
+                    success: function (data) {
+                        var object = JSON.parse(data)
+                        if (object.username == 'Existe') {
+                            $("#id_username").val("");
+                            Swal.fire({
+                                toast: true,
+                                position: 'top-end',
+                                type: 'error',
+                                title: 'Nombre de usuario no valido.',
+                                showConfirmButton: false,
+                                timer: 3500
+                            })
+                        }
+                    }
+                });
+
+            });
+        });
+
+
+        $(function () {$('#id_email').on('blur', function () {
+                var email = $('#id_email').val();
+                if (email.length < 10 || validarEmail(email)) {
+                    $("#id_email").val("");
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        type: 'error',
+                        title: 'Email no valido.',
+                        showConfirmButton: false,
+                        timer: 3500
+                    })
+                }
+            });
+        });
+
+
+
+        $(function () {
+            $('#logo').on('change', function () {
+                var rutaimg = $(this).val();
+                var extension = rutaimg.substring(rutaimg.length - 3, rutaimg.length);
+                if (extension.toLowerCase() === 'png' || extension.toLowerCase() === 'jpg') {
+                    $('#presentaimg').fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
+                } else {
+                    $(this).val('');
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        type: 'error',
+                        title: 'Formato no valido.',
+                        showConfirmButton: false,
+                        timer: 3500
+                    })
+                }
+            });
+        });
+
+        $(function () {
+            $('#foto').on('change', function () {
+                var rutaimg = $(this).val();
+                var extension = rutaimg.substring(rutaimg.length - 3, rutaimg.length);
+                if (extension.toLowerCase() === 'png' || extension.toLowerCase() === 'jpg') {
+                    $('#presentaimg2').fadeIn("fast").attr('src', URL.createObjectURL(event.target.files[0]));
+                } else {
+                    $(this).val('');
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        type: 'error',
+                        title: 'Formato no valido.',
+                        showConfirmButton: false,
+                        timer: 3500
+                    })
+                }
+            });
+        });
+
+
+        $(document).ready(function () {
+            $('.js-example-basic-single').select2();
+        });
+
+    </script>
+{% endblock %}

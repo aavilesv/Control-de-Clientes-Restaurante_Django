@@ -1,0 +1,150 @@
+{% extends 'sitio/base.html' %}
+
+{% block main %}
+
+    <section id="intro" class="section-intro">
+        <div class="overlay">
+            <div class="container">
+                <div class="main-text">
+                    <h1 class="intro-title">Bienvenido a <span>Multirestaurante</span></h1>
+
+                    <p class="sub-title" STYLE="font-size: 25px;">SAN FRANCISCO DE MILAGRO</p>
+
+                    <div class="search-bar">
+                        <fieldset>
+                            <form class="search-form">
+                                <div class="form-group">
+                                    <i class="lni-bullhorn"></i>
+                                    <input type="text" id="nombrebuscar" class="form-control" width="100%"
+                                           placeholder="Que estas buscando?">
+                                </div>
+                                <div class="form-group">
+                                    <div class="tg-select">
+                                        <select id="categoriabuscar">
+                                            {% for c in categorias %}
+                                                <option value="{{ c.pk }}">{{ c.descripcion }}</option>
+                                            {% endfor %}
+                                            <i class="lnr-chevron-down"></i>
+                                        </select>
+                                        <i class="fas fa-angle-down"></i>
+                                    </div>
+                                </div>
+                                <button id="buscarboton" class="btn btn-common" type="button"><i class="lni-search"></i> Buscar
+                                </button>
+                            </form>
+                        </fieldset>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="main-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="section-title">TOP 10 MEJORES RESTAURANTES</h3>
+                </div>
+                <div class="col-lg-12 col-md-12 col-xs-12 page-content">
+                    <div class="product-filter">
+                        <div class="grid-list-count">
+                            <a class="list switchToGrid" href="#"><i class="fas fa-list"></i></a>
+                            <a class="grid switchToList" href="#"><i class="fas fa-th-large"></i></a>
+                        </div>
+                    </div>
+                    <div class="adds-wrapper">
+                         {% for l in locales %}
+                            <div class="item-list">
+                                <div class="row">
+                                <div class="col-sm-2 no-padding photobox">
+                                    <div class="add-image">
+                                            <a href="/media/{{ l.fotouno }}" data-lightbox="roadtrip"><img src="/media/{{ l.fotouno }}" alt=""></a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-7 add-desc-box">
+                                    <div class="add-details">
+                                        <h5 class="add-title"><a href="/locales/?action=ver&id={{ l.pk }}">{{ l.nombreComercial }}</a>
+                                        </h5>
+
+                                        <div class="info">
+                                            <!--<span class="add-type">B</span>-->
+                                            <span class="date">
+                                            <i class="fas fa-phone"></i>
+                                             {{ l.telefono }}
+                                            </span> -
+                                            <span class="category">
+                                            <i class="fas fa-at"></i> {{ l.correo }}</span> -
+                                            <span class="item-location"><i class="fas fa-map-marker"></i> {{ l.direccion }} </span>
+                                        </div>
+                                        <div class="item_desc">
+                                            <a href="#">{{ l.descripcion }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 float-right  price-box"><br><br>
+                                    <a class="btn btn-danger btn-sm"><i class="fas fa-certificate"></i>
+                                        <span>{{ l.valortotal|floatformat:2 }}</span></a>
+                                    <a class="btn btn-common btn-sm"> <i class="fas fa-eye"></i>
+                                        <span>{{ l.visita }}</span> </a>
+                                    {% if l.oferta == True %}
+                                    <a class="btn btn-success btn-sm" ><i class="fas fa-certificate"></i>
+                                        <span>OFERTA</span></a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <section id="categories-homepage">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="section-title">Categorias</h3>
+                </div>
+                {% for c in categorias %}
+                    <div class="col-lg-3 col-md-6 col-xs-12">
+                    <div class="category-box border-1 wow fadeInUpQuick" data-wow-delay="0.3s">
+                        <div class="category-header">
+                            <a><h4>{{ c.descripcion }}</h4></a>
+                        </div>
+                        <div class="category-content">
+                            <ul>
+                                {% for l in locales %}
+                                    {% if l.categoria.pk == c.pk %}
+                                        <li>
+                                            <a href="/locales/?action=ver&id={{ l.pk }}">{{ l.nombreComercial }}</a>
+                                            <sapn class="category-counter">{{ l.valortotal }}</sapn>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    </div>
+
+
+{% endblock %}
+
+{% block jscript %}
+    <script>
+        $('#buscarboton').click(function(){
+            combo = $('#categoriabuscar').val()
+            nombre = $('#nombrebuscar').val()
+            window.location = '/locales/?criterio=' + combo +'&nombre='+ nombre;
+        })
+    </script>
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'sitio/base.html' %}
+
+{% block main %}
+
+
+    <div class="page-header" style="background: url(/static/sitio/assets/img/banner1.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="breadcrumb-wrapper">
+                        <h2 class="page-title">Restaurar Contraseña</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <section id="content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-4">
+                    <div class="page-login-form box">
+                        <h3>
+                            Restaurar
+                        </h3>
+
+                        <form role="form" class="login-form"  method="POST" action="/seguridad/recuperar/" id="frm-login">{% csrf_token %}
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="icon fas fa-user"></i>
+                                    <input type="text" id="sender-email" class="form-control" name="usuario"
+                                           placeholder="Username">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="icon fas fa-unlock-alt"></i>
+                                    <input type="text" name="email" class="form-control" placeholder="Correo">
+                                </div>
+                            </div>
+
+                            <strong id="ipId"></strong>
+                            <script type="text/javascript">
+                                function get_ip(obj) {
+                                    document.getElementById('ipId').innerHTML = "<input type='hidden' " +
+                                            " name='ip' class='form-control' value='" + obj.ip + "' />";
+                                }
+                            </script>
+                            <script type="text/javascript" src="https://api.ipify.org/?format=jsonp&callback=get_ip"></script>
+
+                            <button id="btnlogin" class="btn btn-common log-btn loading"><span>Cambiar contraseña</span></button>
+                        </form>
+                        <ul class="form-links">
+                            <li class="float-left"><a href="/registro/">No tienes una cuenta?</a></li>
+                            <li class="float-right"><a href="/seguridad/login/">Iniciar Sesión</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="/static/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <script src="/static/lib/jquery.min2.0.js"></script>
+    <script>
+         window.onload = function () {
+        {% if messages %}
+            {% for message in messages %}
+                Swal.fire('{{ message }}');
+            {% endfor %}
+        {% endif %}
+
+    }
+    </script>
+{% endblock %}
+
+

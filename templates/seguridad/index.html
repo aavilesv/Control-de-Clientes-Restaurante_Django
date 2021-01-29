@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+{% block main %}
+    <section class="container-fluid">
+
+
+        <div class="row">
+            <aside class="col-md-3">
+                <div class="card hovercard">
+                    <div class="cardheader">
+                    </div>
+                    <div class="avatar">
+                        <img alt="" src="/media/{{ request.user.usuarios.foto }}">
+                    </div>
+                    <div class="info">
+                        <div class="title">
+                            <a target="_blank" >{{ usuario.first_name }} {{ usuario.last_name }}</a>
+                        </div>
+                        <div class="desc"><em>User:</em> {{ usuario.username }}</div>
+                        <div class="desc">{{ usuario.email }}</div>
+
+
+                    </div>
+                    <div class="bottom">
+                        <a class="btn btn-primary btn-twitter btn-sm" href="/seguridad/logout/">
+                            Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            </aside>
+            <div class="col-md-9 col-12">
+                 {% for grupo in grupos %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-danger" style="margin-bottom: 1rem">
+                                <div class="panel-heading" style="padding: 5px;padding-left: 10px;padding-right: 10px;">
+                                    <strong class="text-info">
+                                        <i class="fa fa-th-list"></i>
+                                        {{ grupo.nombre }}
+                                    </strong>
+                                    <span class="pull-right clickable">
+                                        <i class="fa fa-chevron-circle-up"></i>
+                                    </span>
+                                </div>
+                                <div class="panel-body">
+                                    {% for modulo in grupo.modulos_activos %}
+                                     <a class="icon text-dark" href="{{ modulo.url }}">
+                                          <div class="iconimage">
+                                              <div class="pd">
+                                                  <img src="/static/images/iconos/{{ modulo.icono }}" border="0">
+                                              </div>
+                                          </div>
+                                          <div class="iconname">
+                                              <div class="pd p-2">
+                                                  <h4 class=""><strong>{{ modulo.nombre }}</strong></h4>
+                                                  <span class="icondesc">{{ modulo.descripcion }}</span>
+                                              </div>
+                                          </div>
+                                      </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+        </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block js %}
+    <script src="/static/lib/jquery.min2.0.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block jscript %}
+    <script>
+        $(document).on('click', '.panel-heading span.clickable', function (e) {
+            var $this = $(this);
+            if (!$this.hasClass('panel-collapsed')) {
+                $this.parents('.panel').find('.panel-body').slideUp();
+                $this.addClass('panel-collapsed');
+                $this.find('i').removeClass('fa fa-chevron-circle-up').addClass('fa fa-chevron-circle-down');
+            } else {
+                $this.parents('.panel').find('.panel-body').slideDown();
+                $this.removeClass('panel-collapsed');
+                $this.find('i').removeClass('fa fa-chevron-circle-down').addClass('fa fa-chevron-circle-up');
+            }
+        })
+    </script>
+{% endblock %}
